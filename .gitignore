@@ -1,0 +1,4 @@
+bin/
+obj/
+.vs/
+/src/lids.app/obj/project.assets.json

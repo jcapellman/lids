@@ -7,6 +7,6 @@ namespace lids.library.Managers
 {
     public class QueueManager
     {
-        public async void AddToQueueAsync()
+        
     }
 }

@@ -10,16 +10,13 @@ namespace lids.library.DAL
 {
     public class SQLiteDAL : BaseDAL
     {
-        private Queue<QueueItem> _queueItems;
+        private readonly Queue<QueueItem> _queueItems;
 
-        public SQLiteDAL(string connectionString) : base(connectionString) { _queueItems = new List<QueueItem>(); }
+        public SQLiteDAL(string connectionString) : base(connectionString) { _queueItems = new Queue<QueueItem>(); }
 
         public override void Write<T>(T writeObject)
         {
-            using (var sqlFactory = new SQLiteConnection(_connectionString))
-            {
-                sqlFactory.Insert(writeObject);                
-            }
+            addToQueue<T>(DAL_TRANSACTION_TYPES.INSERT, writeObject);
         }
 
         public override T Get<T>(int id)
@@ -29,9 +26,31 @@ namespace lids.library.DAL
 
         public override void Delete<T>(T writeObject)
         {
+            addToQueue<T>(DAL_TRANSACTION_TYPES.DELETE, writeObject);
+        }
+
+        private void addToQueue<T>(DAL_TRANSACTION_TYPES transactionType, dynamic obj = null)
+        {
+            _queueItems.Enqueue(new QueueItem
+            {
+                QueueObject = obj,
+                TransactionType = transactionType
+            });
+        }
+
+        private void write(dynamic obj)
+        {
             using (var sqlFactory = new SQLiteConnection(_connectionString))
             {
-                sqlFactory.Delete(writeObject);
+                sqlFactory.Insert(obj);
+            }
+        }
+
+        private void delete(dynamic obj)
+        {
+            using (var sqlFactory = new SQLiteConnection(_connectionString))
+            {
+                sqlFactory.Delete(obj);
             }
         }
 
@@ -43,10 +62,10 @@ namespace lids.library.DAL
                 switch (item.TransactionType)
                 {
                     case DAL_TRANSACTION_TYPES.DELETE:
-                        Delete(item.QueueObject);
+                        delete(item.QueueObject);
                         break;
                     case DAL_TRANSACTION_TYPES.INSERT:
-                        Write(item.QueueObject);
+                        write(item.QueueObject);
                         break;
                     case DAL_TRANSACTION_TYPES.UPDATE:
                         break;

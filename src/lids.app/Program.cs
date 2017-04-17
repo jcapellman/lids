@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using lids.library;
 
 namespace lids.app
 {
@@ -6,7 +7,9 @@ namespace lids.app
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var lm = new lidsmain("lids.db");
+
+            lm.MainLoop();
         }
     }
 }

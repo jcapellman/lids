@@ -1,5 +1,4 @@
-﻿
-using lids.library;
+﻿using lids.library;
 
 namespace lids.app
 {

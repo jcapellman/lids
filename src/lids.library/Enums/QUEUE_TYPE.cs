@@ -2,6 +2,7 @@
 {
     public enum QUEUE_TYPE
     {
-        LISTEN_FOR_CHANGES
+        LISTEN_FOR_CHANGES,
+        RECORD_HOST_INFORMATION
     }
 }

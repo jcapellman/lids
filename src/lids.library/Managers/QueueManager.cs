@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using lids.library.Enums;
 using lids.library.Transports;
 
@@ -15,13 +15,18 @@ namespace lids.library.Managers
             _transportItems = new Queue<QueueTransportItem>();
         }
 
-        public void AddToQueue(QUEUE_TYPE queueType, dynamic dataObject = null)
+        public async Task<bool> AddToQueue(QUEUE_TYPE queueType, dynamic dataObject = null)
         {
-            _transportItems.Enqueue(new QueueTransportItem
+            await Task.Run(() =>
             {
-                Data = dataObject,
-                QueueType = queueType
+                _transportItems.Enqueue(new QueueTransportItem
+                {
+                    Data = dataObject,
+                    QueueType = queueType
+                });
             });
+
+            return true;
         }
 
         public void ProcessQueue()

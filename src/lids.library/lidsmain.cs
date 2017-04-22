@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading;
 
 using lids.library.DAL;
 using lids.library.Enums;
@@ -10,7 +11,7 @@ namespace lids.library
     {
         private SQLiteDAL _sqlLie;
         public static LogManager _logManager;
-        private QueueManager _queueManager;
+        private readonly QueueManager _queueManager;
 
         public lidsmain(string connectionString)
         {
@@ -30,7 +31,11 @@ namespace lids.library
 
             while (true)
             {
-                _queueManager.ProcessQueue();    
+                await _queueManager.AddToQueue(QUEUE_TYPE.LISTEN_FOR_CHANGES);
+
+                _queueManager.ProcessQueue(); 
+                
+                Thread.Sleep(1000);
             }
 
             _logManager.FlushLog();

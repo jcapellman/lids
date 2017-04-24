@@ -12,7 +12,7 @@ namespace lids.library
 
         public lidsmain(string connectionString)
         {
-            _logManager =new LogManager();
+            _logManager = new LogManager();
 
             _sqlLie = new SQLiteDAL(connectionString);
         }
@@ -20,7 +20,7 @@ namespace lids.library
         public void MainLoop()
         {
             var hostName = Dns.GetHostName();
-
+            
             _logManager.WriteMessage($"Grabbing hostname...{hostName}");
             
             while (true)

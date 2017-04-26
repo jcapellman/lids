@@ -29,7 +29,7 @@ namespace lids.library
 
             await _queueManager.AddToQueue(QUEUE_TYPE.RECORD_HOST_INFORMATION, hostName);
 
-            while (true)
+            while (_queueManager.IsRunning())
             {
                 await _queueManager.AddToQueue(QUEUE_TYPE.LISTEN_FOR_CHANGES);
 

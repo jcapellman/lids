@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using lids.library.Enums;
 using lids.library.Transports;
 
@@ -28,6 +29,8 @@ namespace lids.library.Managers
 
             return true;
         }
+
+        public bool IsRunning() => true;
 
         public void ProcessQueue()
         {

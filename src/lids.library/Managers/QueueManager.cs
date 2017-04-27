@@ -11,6 +11,8 @@ namespace lids.library.Managers
     {
         private readonly Queue<QueueTransportItem> _transportItems;
 
+        private bool _endProcessing = true;
+
         public QueueManager()
         {
             _transportItems = new Queue<QueueTransportItem>();
@@ -30,7 +32,7 @@ namespace lids.library.Managers
             return true;
         }
 
-        public bool IsRunning() => true;
+        public bool IsRunning() => _endProcessing;
 
         public void ProcessQueue()
         {
@@ -41,6 +43,9 @@ namespace lids.library.Managers
                 switch (item.QueueType)
                 {
                     case QUEUE_TYPE.LISTEN_FOR_CHANGES:
+                        break;
+                    case QUEUE_TYPE.END_PROCESSING:
+                        _endProcessing = false;
                         break;
                 }
             }

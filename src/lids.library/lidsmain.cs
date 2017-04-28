@@ -9,16 +9,13 @@ namespace lids.library
 {
     public class lidsmain
     {
-        private SQLiteDAL _sqlLie;
         public static LogManager _logManager;
         private readonly QueueManager _queueManager;
 
         public lidsmain(string connectionString)
         {
             _logManager =new LogManager();
-            _queueManager = new QueueManager();
-
-            _sqlLie = new SQLiteDAL(connectionString);
+            _queueManager = new QueueManager(new SQLiteDAL(connectionString));
         }
 
         public async void MainLoop()

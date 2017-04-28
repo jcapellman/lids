@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
-
+using lids.library.DAL;
 using lids.library.Enums;
+using lids.library.QueueTasks;
 using lids.library.Transports;
 
 namespace lids.library.Managers
@@ -11,10 +14,12 @@ namespace lids.library.Managers
     {
         private readonly Queue<QueueTransportItem> _transportItems;
 
+        private BaseDAL _dalObject;
         private bool _isRunning = true;
 
-        public QueueManager()
+        public QueueManager(BaseDAL dalObject)
         {
+            _dalObject = dalObject;
             _transportItems = new Queue<QueueTransportItem>();
         }
 
@@ -34,6 +39,11 @@ namespace lids.library.Managers
 
         public bool IsRunning() => _isRunning;
 
+        private BaseQueueTask getQueueTask(QUEUE_TYPE queueType) => (from task in Assembly.GetEntryAssembly().GetTypes()
+                                                                     where task == typeof(BaseQueueTask)
+                                                                     select (BaseQueueTask) Activator.CreateInstance(task)).FirstOrDefault(obj => 
+                                                                     obj.GetQueueType() == queueType);
+
         public void ProcessQueue()
         {
             while (_transportItems.Any())
@@ -42,10 +52,19 @@ namespace lids.library.Managers
 
                 switch (item.QueueType)
                 {
-                    case QUEUE_TYPE.LISTEN_FOR_CHANGES:
-                        break;
                     case QUEUE_TYPE.END_PROCESSING:
                         _isRunning = false;
+                        break;
+                    default:
+                        var task = getQueueTask(item.QueueType);
+
+                        if (task == null)
+                        {
+                            continue;
+                        }
+
+                        task.ProcessTask();
+
                         break;
                 }
             }

@@ -13,6 +13,6 @@
 
         public abstract T Get<T>(int id);
 
-        public abstract void Delete<T>(T writeObject);        
+        public abstract void Delete<T>(T writeObject);       
     }
 }

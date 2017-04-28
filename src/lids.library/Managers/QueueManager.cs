@@ -7,6 +7,7 @@ using lids.library.DAL;
 using lids.library.Enums;
 using lids.library.QueueTasks;
 using lids.library.Transports;
+using lids.library.Wrappers;
 
 namespace lids.library.Managers
 {
@@ -16,6 +17,11 @@ namespace lids.library.Managers
 
         private BaseDAL _dalObject;
         private bool _isRunning = true;
+
+        private TaskWrapper Wrapper => new TaskWrapper
+        {
+            DAL = _dalObject
+        };
 
         public QueueManager(BaseDAL dalObject)
         {
@@ -41,7 +47,7 @@ namespace lids.library.Managers
 
         private BaseQueueTask getQueueTask(QUEUE_TYPE queueType) => (from task in Assembly.GetEntryAssembly().GetTypes()
                                                                      where task == typeof(BaseQueueTask)
-                                                                     select (BaseQueueTask) Activator.CreateInstance(task)).FirstOrDefault(obj => 
+                                                                     select (BaseQueueTask) Activator.CreateInstance(task, Wrapper)).FirstOrDefault(obj => 
                                                                      obj.GetQueueType() == queueType);
 
         public void ProcessQueue()

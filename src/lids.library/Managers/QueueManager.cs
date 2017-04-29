@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+
 using lids.library.DAL;
 using lids.library.Enums;
 using lids.library.QueueTasks;
@@ -15,7 +16,7 @@ namespace lids.library.Managers
     {
         private readonly Queue<QueueTransportItem> _transportItems;
 
-        private BaseDAL _dalObject;
+        private readonly BaseDAL _dalObject;
         private bool _isRunning = true;
 
         private TaskWrapper Wrapper => new TaskWrapper

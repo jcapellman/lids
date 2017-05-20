@@ -18,17 +18,17 @@ namespace lids.library
             _queueManager = new QueueManager(new SQLiteDAL(connectionString));
         }
 
-        public async void MainLoop()
+        public void MainLoop()
         {
             var hostName = Dns.GetHostName();
 
             _logManager.WriteMessage($"Grabbing hostname...{hostName}");
 
-            await _queueManager.AddToQueue(QUEUE_TYPE.RECORD_HOST_INFORMATION, hostName);
+            _queueManager.AddToQueue(QUEUE_TYPE.RECORD_HOST_INFORMATION, hostName);
 
             while (_queueManager.IsRunning())
             {
-                await _queueManager.AddToQueue(QUEUE_TYPE.LISTEN_FOR_CHANGES);
+                _queueManager.AddToQueue(QUEUE_TYPE.LISTEN_FOR_CHANGES);
 
                 _queueManager.ProcessQueue(); 
                 

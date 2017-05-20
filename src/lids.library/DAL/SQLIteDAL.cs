@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-
+using lids.library.DAL.Tables;
 using lids.library.DAL.Transports;
 using lids.library.Enums;
 
@@ -12,8 +13,27 @@ namespace lids.library.DAL
     {
         private readonly Queue<QueueItem> _queueItems;
 
-        public SQLiteDAL(string connectionString) : base(connectionString) { _queueItems = new Queue<QueueItem>(); }
+        public SQLiteDAL(string connectionString) : base(connectionString)
+        {
+            _queueItems = new Queue<QueueItem>();
 
+            if (File.Exists(connectionString))
+            {
+                return;
+            }
+
+            createDB();
+        }
+
+        private void createDB()
+        {
+            using (var sqlFactory = new SQLiteConnection(_connectionString))
+            {
+                sqlFactory.CreateTable<Devices>();
+                sqlFactory.CreateTable<HostInformation>();
+                sqlFactory.CreateTable<Logs>();
+            }
+        }
         public override void Write<T>(T writeObject)
         {
             addToQueue<T>(DAL_TRANSACTION_TYPES.INSERT, writeObject);

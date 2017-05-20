@@ -12,7 +12,7 @@ namespace lids.library.Managers
         public LogManager()
         {
             _sbLog = new StringBuilder();
-            _logName = $"{DateTime.Now.Ticks}.log";
+            _logName = $"Logs\\{DateTime.Now.Ticks}.log";
         }
 
         public void WriteMessage(string msg)
@@ -22,6 +22,11 @@ namespace lids.library.Managers
 
         public void FlushLog()
         {
+            if (!Directory.Exists("Logs"))
+            {
+                Directory.CreateDirectory("Logs");
+            }
+
             File.WriteAllText(_logName, _sbLog.ToString());
         }
     }

@@ -30,15 +30,12 @@ namespace lids.library.Managers
             _transportItems = new Queue<QueueTransportItem>();
         }
 
-        public async Task<bool> AddToQueue(QUEUE_TYPE queueType, dynamic dataObject = null)
+        public bool AddToQueue(QUEUE_TYPE queueType, dynamic dataObject = null)
         {
-            await Task.Run(() =>
+            _transportItems.Enqueue(new QueueTransportItem
             {
-                _transportItems.Enqueue(new QueueTransportItem
-                {
-                    Data = dataObject,
-                    QueueType = queueType
-                });
+                Data = dataObject,
+                QueueType = queueType
             });
 
             return true;

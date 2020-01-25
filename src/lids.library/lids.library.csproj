@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="sqlite-net-pcl" Version="1.6.258-beta" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
   </ItemGroup>
 
 </Project>
